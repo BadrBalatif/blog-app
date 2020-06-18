@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**Route::get('/', function () {
     return view('welcome');
-}); */
+});  */
 
 
 
@@ -57,6 +57,12 @@ Auth::routes(['verify'=>true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/', function(){
-    return 'Home';
-}); 
+   return 'Home';
+});  
+
+Route::get('/redirect/{service}','SocialController@redirect');
+
+Route::get('/callback/{service}','SocialController@callback');
+
+
 
