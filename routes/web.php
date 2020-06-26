@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,12 +59,35 @@ Auth::routes(['verify'=>true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/', function(){
-   return 'Home';
+   return view('welcome');
 });  
 
 Route::get('/redirect/{service}','SocialController@redirect');
 
 Route::get('/callback/{service}','SocialController@callback');
+
+// fillable & hidden
+Route::get('fillable','CrudController@getOffers');
+
+//best practice to insert data to DB
+
+
+   // Route::get('store','CrudController@store');
+Route::group(['prefix' =>LaravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], 
+  function (){
+     Route::group(['prefix' => 'offers'],
+       function () {
+          Route::get('create','CrudController@create');
+          Route::post('store','CrudController@store')->name('offers.store');
+
+          Route::get('edit/{offer_id}','CrudController@editOffer');
+          Route::post('update/{offer_id}','CrudController@updateOffer')->name('offers.update');
+          Route::get('delete/{offer_id}','CrudController@deleteOffer')->name('offers.delete');
+          Route::get('all','CrudController@getAllOffers')->name('offers.all');
+
+      });
+     Route::get('youtube','CrudController@getVideo');
+});
 
 
 
